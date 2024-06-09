@@ -12,7 +12,7 @@ export class AppComponent {
 
   searchForm! : FormGroup;
 
-  constructor (private fb:FormBuilder, private weather:WeatherService ) {}
+  constructor (private fb:FormBuilder, private weatherService:WeatherService ) {}
 
   ngOnInit() {
     this.searchForm = this.fb.group({
@@ -21,7 +21,17 @@ export class AppComponent {
   }
 
   searchWeather() {
-    console.log(this.searchForm.value);
+    if (this.searchForm.valid) {
+      const formValues = this.searchForm.value;
+      this.weatherService.getWeatherData(formValues.cityName).subscribe({
+        next: (result) => {
+          console.log('Sucesso na API', result);
+        },
+        error: (error) => {
+          console.error('Erro na API', error);
+        }
+      });
+    }
   }
 
   title = 'weather-app';
